@@ -1,0 +1,7 @@
+---
+mysql_root_password: "1080"
+app_user: "alfon"
+http_host: "agrimaldo.com"
+http_conf: "agrimaldo.com.conf"
+http_port: "80"
+disable_default: true

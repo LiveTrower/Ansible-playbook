@@ -1,0 +1,52 @@
+---
+- hosts: all
+  become: true
+  vars_files:
+    - vars/default2.yml
+  tasks:
+    - name: Create document root
+      file:
+        path: "/var/www/{{ http_host }}"
+        state: directory
+        owner: "{{ app_user }}"
+        mode: '0755'
+
+    - name: Set up Apache virtualhost
+      template:
+        src: "files/apache.conf.j2"
+        dest: "/etc/apache2/sites-available/{{ http_conf }}"
+    
+    - name: Reload Apache
+      service:
+         name=apache2
+         state=reloaded
+
+    - name: Enable new site
+      shell: /usr/sbin/a2ensite {{ http_conf }}
+
+    - name: Reload Apache
+      service:
+         name=apache2
+         state=reloaded
+
+    - name: Clone pagina estatica repository
+      git:
+        repo: 'https://github.com/AlfonsoGrimaldo/Pagina-Registro.git'
+        dest: /var/www/agrimaldo.com/estatico
+
+  # PHP Info Page
+    - name: Sets Up PHP Info Page
+      template:
+        src: "files/info.php.j2"
+        dest: "/var/www/{{ http_host }}/info.php"
+
+  handlers:
+    - name: Reload Apache
+      service:
+        name: apache2
+        state: reloaded
+
+    - name: Restart Apache
+      service:
+        name: apache2
+        state: restarted

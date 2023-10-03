@@ -1,0 +1,5 @@
+---
+app_user: "alfon"
+http_host: "aalmaguer.com"
+http_conf: "aalmaguer.com.conf"
+http_port: "80"
